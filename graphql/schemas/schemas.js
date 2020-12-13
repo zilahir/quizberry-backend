@@ -1,12 +1,19 @@
 const graphql = require('graphql');
 const UserSchema = require('../../users/models/users.model')
-const QuizSchema = require('../../quiz/models/quiz.model')
+const Quiz = require('../../quiz/models/quiz.model');
+const Answer = require('../../answer/model/answer.model');
+const Question = require('../../question/models/question.model')
 
 const { 
-  GraphQLObjectType, GraphQLString, 
-  GraphQLID, GraphQLInt,GraphQLSchema, 
-  GraphQLList,GraphQLNonNull 
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLID,
+  GraphQLInt,
+  GraphQLSchema,
+  GraphQLList,
+  GraphQLNonNull
 } = graphql;
+
 
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -60,14 +67,60 @@ const RootQuery = new GraphQLObjectType({
     quizes: {
       type: new GraphQLList(QuizType),
       resolve() {
-        return QuizSchema.QuizSchema.find({})
+        return Quiz.find({})
       }
     },
     quiz: {
       type: QuizType,
       args: { id: { type: GraphQLID }},
       resolve(parent, args) {
-        return QuizSchema.QuizSchema.findById(args.id)
+        return Quiz.findById(args.id)
+      }
+    }
+  }
+})
+
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    createAnswer: {
+      type: AnswerType,
+      args: {
+        answer: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parent, args) {
+        const { answer } = args
+        const newAnswer = new Answer({
+          answer
+        })
+        return newAnswer.save()
+      }
+    },
+
+    createQuestion: {
+      type: QuestionType,
+      args: {
+        question: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, args) {
+        const { question } = args
+        const newQuestion = new Question({
+          question
+        })
+        return newQuestion.save()
+      }
+    },
+
+    createQuiz: {
+      type: QuizType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        questions: {
+          type: GraphQLList(QuestionType)
+        }
+      },
+      resolve(parent, args) {
+
       }
     }
   }
@@ -75,4 +128,5 @@ const RootQuery = new GraphQLObjectType({
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation: Mutation
 })

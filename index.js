@@ -6,11 +6,8 @@ const serverless = require('serverless-http');
 const io = require("socket.io")(server);
 const UsersRouter = require('./users/routes.config');
 const AuthorizationRouter = require('./authorization/routes.config');
-const AnswerRouter = require('./answer/routes.config');
-const QuestionRouter = require('./question/routes.config');
 const EmailRouter = require('./emails/routes.config');
 const { graphqlHTTP } = require('express-graphql');
-const graphQlController = require('./graphql/controller/graphql.controller')
 const schema = require('./graphql/schemas/schemas')
 
 require('dotenv').config()
@@ -34,56 +31,13 @@ app.use(bodyParser.json());
 
 app.use('/graphql', graphqlHTTP({
     schema,
-    // rootValue: graphQlController.root,
     graphiql: true,
 }))
 
 AuthorizationRouter.routesConfig(app);
 UsersRouter.routesConfig(app);
-AnswerRouter.routesConfig(app)
-QuestionRouter.routesConfig(app)
 EmailRouter.routesConfig(app);
 
-io.on("connection", socket => {
-    const { id } = socket.client;
-    // console.log(`User connected: ${id}`);
-    socket.on("isPlaying", ({prompterId, isPlaying}) => {
-        // console.log(`${id}: prompterId ${prompterId} isPlaying: ${isPlaying}`);
-        io.emit("isPlaying", { prompterId, isPlaying });
-    });
-
-    socket.on("incSpeed", prompterId => {
-        // console.debug("incSpeed", prompterId)
-        io.emit("incSpeed", prompterId);
-    });
-
-    socket.on("decSpeed", prompterId => {
-        // console.debug("decSpeed", prompterId)
-        io.emit("decSpeed", prompterId);
-    });
-
-    socket.on("jumpUp", prompterId => {
-        // console.debug("jumpUp", prompterId)
-        io.emit("jumpUp", prompterId);
-    });
-
-    socket.on("jumpDown", prompterId => {
-        // console.debug("jumpDown", prompterId)
-        io.emit("jumpDown", prompterId);
-    });
-
-    socket.on("updatePrompter", updatedPrompter => {
-        // console.debug("updatedPrompter", updatedPrompter)
-        io.emit("updatePrompter", updatedPrompter);
-    });
-});
-
-io.sockets.on('connection', function(socket) {
-    socket.on('room', function(room) {
-      socket.join(room);
-      // console.debug('room', room)
-    });
-  });
 
 app.get('/', function (req, res) {
     res.send({

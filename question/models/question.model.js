@@ -16,17 +16,10 @@ questionSchema.virtual('id').get(function () {
   return this._id.toHexString();
 });
 
-// Ensure virtual fields are serialised.
 questionSchema.set('toJSON', {
   virtuals: true
 });
 
-Question = mongoose.model('Question', questionSchema);
 
-exports.createQuestion = (questionData) => {
- const newQuestion = new Question(questionData)
- return newQuestion.save()
-}
-
-exports.QuestionSchema = mongoose.model('Question', questionSchema);
+module.exports = mongoose.model('Question', questionSchema);
 
