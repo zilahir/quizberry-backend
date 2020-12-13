@@ -1,0 +1,7 @@
+{
+  "root": true,
+  "extends": [
+    "@zilahir/eslint-config/nodejs",
+    "plugin:import/errors"
+  ]
+}
