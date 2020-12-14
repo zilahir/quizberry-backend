@@ -40,12 +40,12 @@ const QuestionType = new GraphQLObjectType({
 	name: 'Question',
 	fields: () => ({
 		id: { type: GraphQLID, resolve(parent) {
-			return parent.toString()
+			
 		} },
 		question: { type: GraphQLString },
-		/*answers: {
+		answers: {
 			type: new GraphQLList(AnswerType)
-		},*/
+		},
 	})
 })
 
