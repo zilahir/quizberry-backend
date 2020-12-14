@@ -11,9 +11,10 @@ const {
 	GraphQLID,
 	GraphQLSchema,
 	GraphQLList,
-	GraphQLNonNull
+	GraphQLNonNull,
+	GraphQLInputObjectType,
+	GraphQLBoolean
 } = graphql
-
 
 const UserType = new GraphQLObjectType({
 	name: 'User',
@@ -29,7 +30,8 @@ const AnswerType = new GraphQLObjectType({
 	name: 'Answer',
 	fields: () => ({
 		id: { type: GraphQLID },
-		answer: { type: GraphQLString }
+		answer: { type: GraphQLString },
+		isCorrect: { type: GraphQLBoolean }
 	})
 })
 
@@ -42,6 +44,13 @@ const QuestionType = new GraphQLObjectType({
 			type: new GraphQLList(AnswerType)
 		}
 	})
+})
+
+const QuestionInputType = new GraphQLInputObjectType({
+	name: 'QuestionInputType',
+	fields: {
+		id: { type: new GraphQLList(GraphQLString) },
+	}
 })
 
 const QuizType = new GraphQLObjectType({
@@ -72,7 +81,7 @@ const RootQuery = new GraphQLObjectType({
 		},
 		quiz: {
 			type: QuizType,
-			args: { id: { type: GraphQLID }},
+			args: { id: { type: GraphQLString }},
 			resolve(parent, args) {
 				return Quiz.findById(args.id)
 			}
@@ -86,12 +95,14 @@ const Mutation = new GraphQLObjectType({
 		createAnswer: {
 			type: AnswerType,
 			args: {
-				answer: { type: new GraphQLNonNull(GraphQLString) }
+				answer: { type: new GraphQLNonNull(GraphQLString) },
+				isCorrect: { type: new GraphQLNonNull(GraphQLBoolean) }
 			},
 			resolve(parent, args) {
-				const { answer } = args
+				const { answer, isCorrect } = args
 				const newAnswer = new Answer({
-					answer
+					answer,
+					isCorrect
 				})
 				return newAnswer.save()
 			}
@@ -107,6 +118,7 @@ const Mutation = new GraphQLObjectType({
 				const newQuestion = new Question({
 					question
 				})
+
 				return newQuestion.save()
 			}
 		},
@@ -116,11 +128,17 @@ const Mutation = new GraphQLObjectType({
 			args: {
 				name: { type: new GraphQLNonNull(GraphQLString) },
 				questions: {
-					type: GraphQLList(QuestionType)
+					type: QuestionInputType
 				}
 			},
 			resolve(parent, args) {
-				return `${parent} ${args}`
+				const { name, questions } = args
+				const newQuiz = new Quiz({
+					name,
+					questions: questions.id
+				}).populate('Question')
+
+				return newQuiz.save()
 			}
 		}
 	}

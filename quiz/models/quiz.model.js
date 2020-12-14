@@ -10,12 +10,12 @@ const quizSchema = new Schema({
 	}]
 })
 
-quizSchema.virtual('id').get(function () {
-	return this._id.toHexString()
-})
-
 quizSchema.set('toJSON', {
 	virtuals: true
+})
+
+quizSchema.virtual('id').get(function () {
+	return this._id.toHexString()
 })
 
 module.exports = mongoose.model('Quiz', quizSchema)
