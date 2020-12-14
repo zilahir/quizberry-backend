@@ -2,6 +2,7 @@ const { Schema } = require("mongoose")
 
 const mongoose = require('../../services/mongoose.service').mongoose
 
+
 const quizSchema = new Schema({
 	name: String,
 	questions: [{

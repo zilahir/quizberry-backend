@@ -39,11 +39,13 @@ const AnswerType = new GraphQLObjectType({
 const QuestionType = new GraphQLObjectType({
 	name: 'Question',
 	fields: () => ({
-		id: { type: GraphQLID },
+		id: { type: GraphQLID, resolve(parent) {
+			return parent.toString()
+		} },
 		question: { type: GraphQLString },
 		answers: {
 			type: new GraphQLList(AnswerType)
-		}
+		},
 	})
 })
 
@@ -145,7 +147,7 @@ const Mutation = new GraphQLObjectType({
 					name,
 					questions: questions.questonIds.map(thisId => mongoose.mongoose.Types.ObjectId(thisId.id).toHexString())
 				})
-
+				
 				return newQuiz.save()
 			}
 		}
