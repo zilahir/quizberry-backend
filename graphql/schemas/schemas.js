@@ -50,7 +50,14 @@ const QuestionType = new GraphQLObjectType({
 const QuestionInputType = new GraphQLInputObjectType({
 	name: 'QuestionInputType',
 	fields: {
-		id: { type: new GraphQLList(GraphQLID) },
+		id: { type: new GraphQLNonNull(GraphQLID) }
+	}
+})
+
+const QuestionListInputType = new GraphQLInputObjectType({
+	name: 'QuestionListInputType',
+	fields: {
+		questonIds: { type: new GraphQLList(QuestionInputType) },
 	}
 })
 
@@ -129,14 +136,14 @@ const Mutation = new GraphQLObjectType({
 			args: {
 				name: { type: new GraphQLNonNull(GraphQLString) },
 				questions: {
-					type: QuestionInputType
+					type: QuestionListInputType
 				}
 			},
 			resolve(parent, args) {
 				const { name, questions } = args
 				const newQuiz = new Quiz({
 					name,
-					questions: questions.id.map(thisId => mongoose.mongoose.Types.ObjectId(thisId).toHexString())
+					questions: questions.id.map(thisId => mongoose.mongoose.Types.ObjectId(thisId.id).toHexString())
 				}).populate('questions')
 
 				return newQuiz.save()
