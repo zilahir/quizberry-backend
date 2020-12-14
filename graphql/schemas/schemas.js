@@ -51,7 +51,7 @@ const QuestionInputType = new GraphQLInputObjectType({
 	name: 'QuestionInputType',
 	fields: {
 		id: { type: new GraphQLNonNull(GraphQLID) }
-	}
+	},
 })
 
 const QuestionListInputType = new GraphQLInputObjectType({
@@ -143,7 +143,7 @@ const Mutation = new GraphQLObjectType({
 				const { name, questions } = args
 				const newQuiz = new Quiz({
 					name,
-					questions: questions.id.map(thisId => mongoose.mongoose.Types.ObjectId(thisId.id).toHexString())
+					questions: questions.questonIds.map(thisId => mongoose.mongoose.Types.ObjectId(thisId.id).toHexString())
 				}).populate('questions')
 
 				return newQuiz.save()
