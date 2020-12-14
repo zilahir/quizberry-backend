@@ -4,6 +4,7 @@ const UserSchema = require('../../users/models/users.model')
 const Quiz = require('../../quiz/models/quiz.model')
 const Answer = require('../../answer/model/answer.model')
 const Question = require('../../question/models/question.model')
+const mongoose = require('../../services/mongoose.service')
 
 const { 
 	GraphQLObjectType,
@@ -49,7 +50,7 @@ const QuestionType = new GraphQLObjectType({
 const QuestionInputType = new GraphQLInputObjectType({
 	name: 'QuestionInputType',
 	fields: {
-		id: { type: new GraphQLList(GraphQLString) },
+		id: { type: new GraphQLList(GraphQLID) },
 	}
 })
 
@@ -76,7 +77,7 @@ const RootQuery = new GraphQLObjectType({
 		quizes: {
 			type: new GraphQLList(QuizType),
 			resolve() {
-				return Quiz.find({})
+				return Quiz.find({}).populate('questions')
 			}
 		},
 		quiz: {
@@ -135,8 +136,8 @@ const Mutation = new GraphQLObjectType({
 				const { name, questions } = args
 				const newQuiz = new Quiz({
 					name,
-					questions: questions.id
-				}).populate('Question')
+					questions: questions.id.map(thisId => mongoose.mongoose.Types.ObjectId(thisId).toHexString())
+				}).populate('questions')
 
 				return newQuiz.save()
 			}
