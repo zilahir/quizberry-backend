@@ -43,9 +43,9 @@ const QuestionType = new GraphQLObjectType({
 			return parent.toString()
 		} },
 		question: { type: GraphQLString },
-		answers: {
+		/*answers: {
 			type: new GraphQLList(AnswerType)
-		},
+		},*/
 	})
 })
 
