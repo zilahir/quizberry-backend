@@ -40,7 +40,7 @@ const QuestionType = new GraphQLObjectType({
 	name: 'Question',
 	fields: () => ({
 		id: { type: GraphQLID },
-		question: { type: QuestionType },
+		question: { type: GraphQLString },
 		answers: {
 			type: new GraphQLList(AnswerType)
 		},
