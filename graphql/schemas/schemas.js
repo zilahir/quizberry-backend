@@ -2,9 +2,6 @@ const graphql = require('graphql')
 
 const UserSchema = require('../../users/models/users.model')
 const Quiz = require('../../quiz/models/quiz.model')
-const Answer = require('../../answer/model/answer.model')
-const Question = require('../../question/models/question.model')
-const mongoose = require('../../services/mongoose.service')
 
 const { 
 	GraphQLObjectType,
@@ -30,41 +27,35 @@ const UserType = new GraphQLObjectType({
 const AnswerType = new GraphQLObjectType({
 	name: 'Answer',
 	fields: () => ({
-		id: { type: GraphQLID },
 		answer: { type: GraphQLString },
 		isCorrect: { type: GraphQLBoolean }
 	})
 })
 
 const QuestionType = new GraphQLObjectType({
-	name: 'Question',
+	name: 'QuestionType',
 	fields: () => ({
-		id: { type: GraphQLID, resolve(parent) {
-			return parent._id.toString()
-		} },
-		question: { type: GraphQLString, resolve(parent) {
-			console.debug('parentQ', parent)
-			return parent.question
-		} },
-		answers: {
-			type: new GraphQLList(AnswerType)
-		},
+		question: { type: new GraphQLNonNull(GraphQLString) },
+		answers: { type: new GraphQLList(AnswerType) }
 	})
+})
+
+const AnswerInputType = new GraphQLInputObjectType({
+	name: 'AnswerInputType',
+	fields: {
+		answer: { type: new GraphQLNonNull(GraphQLString) },
+		isCorrect: { type: new GraphQLNonNull(GraphQLBoolean) }
+	}
 })
 
 const QuestionInputType = new GraphQLInputObjectType({
 	name: 'QuestionInputType',
 	fields: {
-		id: { type: new GraphQLNonNull(GraphQLID) }
-	},
-})
-
-const QuestionListInputType = new GraphQLInputObjectType({
-	name: 'QuestionListInputType',
-	fields: {
-		questonIds: { type: new GraphQLList(QuestionInputType) },
+		question: { type: new GraphQLNonNull(GraphQLString) },
+		answers: { type: new GraphQLList(AnswerInputType) }
 	}
 })
+
 
 const QuizType = new GraphQLObjectType({
 	name: 'Quiz',
@@ -89,7 +80,7 @@ const RootQuery = new GraphQLObjectType({
 		quizes: {
 			type: new GraphQLList(QuizType),
 			resolve() {
-				return Quiz.find({}).populate('questions')
+				return Quiz.find({})
 			}
 		},
 		quiz: {
@@ -105,50 +96,17 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
 	name: 'Mutation',
 	fields: {
-		createAnswer: {
-			type: AnswerType,
-			args: {
-				answer: { type: new GraphQLNonNull(GraphQLString) },
-				isCorrect: { type: new GraphQLNonNull(GraphQLBoolean) }
-			},
-			resolve(parent, args) {
-				const { answer, isCorrect } = args
-				const newAnswer = new Answer({
-					answer,
-					isCorrect
-				})
-				return newAnswer.save()
-			}
-		},
-
-		createQuestion: {
-			type: QuestionType,
-			args: {
-				question: { type: new GraphQLNonNull(GraphQLString) },
-			},
-			resolve(parent, args) {
-				const { question } = args
-				const newQuestion = new Question({
-					question
-				})
-
-				return newQuestion.save()
-			}
-		},
-
 		createQuiz: {
 			type: QuizType,
 			args: {
 				name: { type: new GraphQLNonNull(GraphQLString) },
-				questions: {
-					type: QuestionListInputType
-				}
+				questions: { type: new GraphQLList(QuestionInputType) }
 			},
 			resolve(parent, args) {
 				const { name, questions } = args
 				const newQuiz = new Quiz({
 					name,
-					questions: questions.questonIds.map(thisId => mongoose.mongoose.Types.ObjectId(thisId.id).toHexString())
+					questions
 				})
 				
 				return newQuiz.save()

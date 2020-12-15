@@ -6,8 +6,11 @@ const mongoose = require('../../services/mongoose.service').mongoose
 const quizSchema = new Schema({
 	name: String,
 	questions: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Question'
+		question: String,
+		answers: [{
+			answer: String,
+			isCorrect: Boolean,
+		}]
 	}]
 })
 
