@@ -39,8 +39,13 @@ const AnswerType = new GraphQLObjectType({
 const QuestionType = new GraphQLObjectType({
 	name: 'Question',
 	fields: () => ({
-		id: { type: GraphQLID },
-		question: { type: GraphQLString },
+		id: { type: GraphQLID, resolve(parent) {
+			return parent._id.toString()
+		} },
+		question: { type: GraphQLString, resolve(parent) {
+			console.debug('parentQ', parent)
+			return parent.question
+		} },
 		answers: {
 			type: new GraphQLList(AnswerType)
 		},
