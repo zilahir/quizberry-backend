@@ -39,10 +39,8 @@ const AnswerType = new GraphQLObjectType({
 const QuestionType = new GraphQLObjectType({
 	name: 'Question',
 	fields: () => ({
-		id: { type: GraphQLID, resolve(parent) {
-			
-		} },
-		question: { type: GraphQLString },
+		id: { type: GraphQLID },
+		question: { type: QuestionType },
 		answers: {
 			type: new GraphQLList(AnswerType)
 		},
@@ -52,7 +50,7 @@ const QuestionType = new GraphQLObjectType({
 const QuestionInputType = new GraphQLInputObjectType({
 	name: 'QuestionInputType',
 	fields: {
-		id: { type: new GraphQLNonNull(GraphQLString) }
+		id: { type: new GraphQLNonNull(GraphQLID) }
 	},
 })
 
