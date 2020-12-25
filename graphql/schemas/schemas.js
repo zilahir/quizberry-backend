@@ -90,6 +90,18 @@ const RootQuery = new GraphQLObjectType({
 			resolve(parent, args) {
 				return Quiz.findById(args.id)
 			}
+		},
+		quizzesByOwner: {
+			type: new GraphQLList(QuizType),
+			args: {
+				owner: {
+					type: GraphQLString
+				}
+			},
+			resolve(parent, args) {
+				console.debug('args', args)
+				return Quiz.find({ owner: args.owner })
+			}
 		}
 	}
 })
@@ -100,15 +112,17 @@ const Mutation = new GraphQLObjectType({
 		createQuiz: {
 			type: QuizType,
 			args: {
+				owner: { type: new GraphQLNonNull(GraphQLString) },
 				name: { type: new GraphQLNonNull(GraphQLString) },
 				questions: { type: new GraphQLList(QuestionInputType) }
 			},
 			resolve(parent, args) {
-				const { name, questions } = args
+				const { name, questions, owner } = args
 				const newQuiz = new Quiz({
 					name,
 					questions,
-					slug: uuidv4().split("-")[0]
+					owner: owner.toString(),
+					slug: uuidv4().split("-")[0].toString()
 				})
 				
 				return newQuiz.save()
