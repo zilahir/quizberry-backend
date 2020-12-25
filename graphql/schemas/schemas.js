@@ -1,4 +1,5 @@
 const graphql = require('graphql')
+const { v4: uuidv4 } = require('uuid')
 
 const UserSchema = require('../../users/models/users.model')
 const Quiz = require('../../quiz/models/quiz.model')
@@ -106,7 +107,8 @@ const Mutation = new GraphQLObjectType({
 				const { name, questions } = args
 				const newQuiz = new Quiz({
 					name,
-					questions
+					questions,
+					slug: uuidv4().split("-")[0]
 				})
 				
 				return newQuiz.save()
