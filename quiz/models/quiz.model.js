@@ -5,6 +5,7 @@ const mongoose = require('../../services/mongoose.service').mongoose
 
 const quizSchema = new Schema({
 	name: String,
+	slug: String,
 	questions: [{
 		question: String,
 		answers: [{
