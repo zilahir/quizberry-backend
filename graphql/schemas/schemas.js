@@ -99,7 +99,6 @@ const RootQuery = new GraphQLObjectType({
 				}
 			},
 			resolve(parent, args) {
-				console.debug('args', args)
 				return Quiz.find({ owner: args.owner })
 			}
 		}
