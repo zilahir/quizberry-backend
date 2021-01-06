@@ -7,6 +7,7 @@ const quizSchema = new Schema({
 	name: String,
 	slug: String,
 	owner: String,
+	createdAt: String,
 	questions: [{
 		question: String,
 		answers: [{

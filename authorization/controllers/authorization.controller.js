@@ -26,6 +26,20 @@ module.exports.login = (req, res) => {
 	}
 }
 
+module.exports.createToken = (req, res) => {
+	const refreshId = req.body.userId + jwtSecret
+	const salt = crypto.randomBytes(16).toString('base64')
+	const hash = crypto.createHmac('sha512', salt).update(refreshId).digest("base64")
+	const token = jwt.sign(req.body, jwtSecret)
+	const b = Buffer.from(hash)
+	const refresh_token = b.toString('base64')
+	res.status(200).send({
+		token,
+		refreshToken: refresh_token
+	})
+
+}
+
 module.exports.createJWTtoken = (req, res) => {
 	const token = jwt.sign(req.body, jwtSecret)
 	res.status(200).send({
