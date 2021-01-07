@@ -36,6 +36,7 @@ const AnswerType = new GraphQLObjectType({
 const QuestionType = new GraphQLObjectType({
 	name: 'QuestionType',
 	fields: () => ({
+		id: { type: new GraphQLNonNull(GraphQLID) },
 		question: { type: new GraphQLNonNull(GraphQLString) },
 		answers: { type: new GraphQLList(AnswerType) }
 	})
