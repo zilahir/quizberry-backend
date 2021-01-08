@@ -9,7 +9,7 @@ const userSchema = new Schema({
 })
 
 userSchema.virtual('id').get(function () {
-	return this._id.toHexString()
+	return String(this._id).toString()
 })
 
 // Ensure virtual fields are serialised.
@@ -18,12 +18,12 @@ userSchema.set('toJSON', {
 })
 
 userSchema.findById = function (cb) {
-	return this.model('Users').find({ id: this.id }, cb)
+	return this.model('User').find({ id: this.id }, cb)
 }
 
-const User = mongoose.model('Users', userSchema)
+const User = mongoose.model('User', userSchema)
 
-module.exports.UserSchema = mongoose.model('Users', userSchema)
+module.exports.UserSchema = mongoose.model('User', userSchema)
 
 module.exports.findByEmail = email => {
 	return User.find({ email: email })

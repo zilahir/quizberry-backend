@@ -3,6 +3,12 @@ const { v4: uuidv4 } = require('uuid')
 
 const UserSchema = require('../../users/models/users.model')
 const Quiz = require('../../quiz/models/quiz.model')
+const { mongoose } = require('../../services/mongoose.service')
+
+const { ObjectId } = mongoose.Types
+ObjectId.prototype.valueOf = function () {
+	return this.toString()
+}
 
 const { 
 	GraphQLObjectType,
@@ -63,7 +69,7 @@ const QuizType = new GraphQLObjectType({
 	name: 'Quiz',
 	fields: () => ({
 		id: { type: GraphQLID },
-		owner: { type: GraphQLString },
+		owner: { type: UserType },
 		slug: { type: GraphQLString },
 		createdAt: { type: GraphQLString },
 		name: { type: GraphQLString },
@@ -102,7 +108,7 @@ const RootQuery = new GraphQLObjectType({
 			resolve(parent, args) {
 				return Quiz.findOne({
 					slug: args.slug,
-				})
+				}).populate('owner')
 			},
 		},
 		quizzesByOwner: {
