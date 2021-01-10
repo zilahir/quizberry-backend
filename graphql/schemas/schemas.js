@@ -33,7 +33,7 @@ const UserType = new GraphQLObjectType({
 })
 
 const ResultType = new GraphQLObjectType({
-	name: 'Resut',
+	name: 'Result',
 	fields: () => ({
 		id: { type: GraphQLID },
 		result: { type: new GraphQLNonNull(GraphQLString), },
@@ -107,6 +107,15 @@ const RootQuery = new GraphQLObjectType({
 				return Quiz.find({})
 			}
 		},
+		resultsByQuizId: {
+			type: new GraphQLList(ResultType),
+			args: { quizId: { type: GraphQLString }},
+			resolve(parent, args) {
+				return Result.find({
+					quizId: args.quizId
+				})
+			}
+		},
 		quiz: {
 			type: QuizType,
 			args: { id: { type: GraphQLString }},
@@ -148,10 +157,11 @@ const Mutation = new GraphQLObjectType({
 				quizId: { type: new GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parents, args) {
-				const { result, userId } = args
+				const { result, userId, quizId } = args
 				const newResult = new Result({
 					userId,
 					result,
+					quizId
 				})
 				return newResult.save()
 			}
