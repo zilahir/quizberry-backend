@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid')
 
 const UserSchema = require('../../users/models/users.model')
 const Quiz = require('../../quiz/models/quiz.model')
+const Result = require('../../result/models/result.model')
 const { mongoose } = require('../../services/mongoose.service')
 
 const { ObjectId } = mongoose.Types
@@ -31,11 +32,21 @@ const UserType = new GraphQLObjectType({
 	})
 })
 
+const ResultType = new GraphQLObjectType({
+	name: 'Resut',
+	fields: () => ({
+		id: { type: GraphQLID },
+		result: { type: GraphQLNonNull(GraphQLString), },
+		userId: { type: GraphQLString },
+	})
+})
+
 const AnswerType = new GraphQLObjectType({
 	name: 'Answer',
 	fields: () => ({
 		answer: { type: GraphQLString },
-		isCorrect: { type: GraphQLBoolean }
+		isCorrect: { type: GraphQLBoolean },
+		id: { type: GraphQLID },
 	})
 })
 
@@ -53,6 +64,14 @@ const AnswerInputType = new GraphQLInputObjectType({
 	fields: {
 		answer: { type: new GraphQLNonNull(GraphQLString) },
 		isCorrect: { type: new GraphQLNonNull(GraphQLBoolean) }
+	}
+})
+
+const ResultInputType = new GraphQLInputObjectType({
+	name: 'ResultInputType',
+	fields: {
+		userId: { type: GraphQLString },
+		result: { type: new GraphQLNonNull(GraphQLString) },
 	}
 })
 
@@ -128,6 +147,21 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
 	name: 'Mutation',
 	fields: {
+		createResult: {
+			type: ResultType,
+			args: {
+				userId: { type: GraphQLString },
+				result: { type: new GraphQLNonNull(GraphQLString) },
+			},
+			resolve(parents, args) {
+				const { result, userId } = args
+				const newResult = new Result({
+					userId,
+					result,
+				})
+				return newResult.save()
+			}
+		},
 		createQuiz: {
 			type: QuizType,
 			args: {
