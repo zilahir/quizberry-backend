@@ -4,7 +4,8 @@ const mongoose = require('../../services/mongoose.service').mongoose
 
 const resultSchema = new Schema({
 	result: String,
-	userId: String
+	userId: String,
+	quizId: String,
 })
 
 resultSchema.set('toJSON', {

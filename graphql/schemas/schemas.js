@@ -36,8 +36,9 @@ const ResultType = new GraphQLObjectType({
 	name: 'Resut',
 	fields: () => ({
 		id: { type: GraphQLID },
-		result: { type: GraphQLNonNull(GraphQLString), },
+		result: { type: new GraphQLNonNull(GraphQLString), },
 		userId: { type: GraphQLString },
+		quizId: { type: new GraphQLNonNull(GraphQLString) }
 	})
 })
 
@@ -64,14 +65,6 @@ const AnswerInputType = new GraphQLInputObjectType({
 	fields: {
 		answer: { type: new GraphQLNonNull(GraphQLString) },
 		isCorrect: { type: new GraphQLNonNull(GraphQLBoolean) }
-	}
-})
-
-const ResultInputType = new GraphQLInputObjectType({
-	name: 'ResultInputType',
-	fields: {
-		userId: { type: GraphQLString },
-		result: { type: new GraphQLNonNull(GraphQLString) },
 	}
 })
 
@@ -152,6 +145,7 @@ const Mutation = new GraphQLObjectType({
 			args: {
 				userId: { type: GraphQLString },
 				result: { type: new GraphQLNonNull(GraphQLString) },
+				quizId: { type: new GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parents, args) {
 				const { result, userId } = args
