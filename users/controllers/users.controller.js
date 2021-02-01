@@ -125,7 +125,9 @@ module.exports.handleFaceBookLogin = (req, res, next) => {
 			UserModel.createUser({
 				email: req.body.email,
 				username: req.body.username,
-			}, true).then(() => {
+				userId: req.body.userId
+			}, true).then(result => {
+				req.body.userId = result._id
 				next()
 			})
 		} else {
