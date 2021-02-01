@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 const express = require("express")
 const app = express()
 const server = require("http").Server(app)
 const bodyParser = require('body-parser')
 const { graphqlHTTP } = require('express-graphql')
+const serverless = require('serverless-http')
 
-// const serverless = require('serverless-http')
 // const io = require("socket.io")(server)
 const UsersRouter = require('./users/routes.config')
 const AuthorizationRouter = require('./authorization/routes.config')
@@ -46,4 +47,4 @@ app.get('/', function (req, res) {
 // eslint-disable-next-line no-console
 server.listen(PORT, () => console.log(`Listen on *: ${PORT}`))
 
-// module.exports.handler = serverless(app);
+// module.exports.handler = serverless(app)

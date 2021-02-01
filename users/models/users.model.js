@@ -6,6 +6,7 @@ const userSchema = new Schema({
 	password: String,
 	username: String,
 	userId: String,
+	isFaceBook: Boolean,
 })
 
 userSchema.virtual('id').get(function () {
@@ -26,7 +27,7 @@ const User = mongoose.model('User', userSchema)
 module.exports.UserSchema = mongoose.model('User', userSchema)
 
 module.exports.findByEmail = email => {
-	return User.find({ email: email })
+	return User.findOne({ email: email })
 }
 module.exports.findById = id => {
 	return User.findById(id)
@@ -38,8 +39,11 @@ module.exports.findById = id => {
 		})
 }
 
-module.exports.createUser = userData => {
-	const user = new User(userData)
+module.exports.createUser = (userData, isFaceBook = false) => {
+	const user = new User({
+		...userData,
+		isFaceBook
+	})
 	return user.save()
 }
 

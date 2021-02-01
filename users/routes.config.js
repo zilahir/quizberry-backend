@@ -37,4 +37,7 @@ module.exports.routesConfig = function (app) {
 		ValidationMiddleware.validJWTNeeded,
 		UsersController.patchByEmail
 	])
+	app.post('/users/facebook', [
+		UsersController.handleFaceBookLogin
+	])
 }
