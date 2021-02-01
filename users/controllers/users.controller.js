@@ -119,20 +119,18 @@ module.exports.getPasswordRecovery = (req, res) => {
 	})
 }
 
-module.exports.handleFaceBookLogin = (req, res) => {
+module.exports.handleFaceBookLogin = (req, res, next) => {
 	UserModel.findByEmail(req.body.email).then(result => {
 		if (!result) {
 			UserModel.createUser({
 				email: req.body.email,
+				username: req.body.username,
 			}, true).then(() => {
-				res.status(200).send({
-					isNewUserCreated: true,
-				})
+				next()
 			})
 		} else {
-			res.status(200).send({
-				isNewUserCreated: false,
-			})
+			req.body.userId = result._id
+			next()
 		}
 	})
 }

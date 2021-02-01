@@ -25,24 +25,23 @@ module.exports.hasAuthValidFields = (req, res, next) => {
 module.exports.isPasswordAndUserMatch = (req, res, next) => {
 	UserModel.findByEmail(req.body.email)
 		.then(user=>{
-			if(!user[0]){
+			if(!user){
 				res.status(200).send({
 					isSuccess: false,
 					error: 'No user with this email',
 					reason: 404,
 				})
 			}else{
-				let passwordFields = user[0].password.split('$')
+				let passwordFields = user.password.split('$')
 				let salt = passwordFields[0]
 				let hash = crypto.createHmac('sha512', salt).update(req.body.password).digest("base64")
 				if (hash === passwordFields[1]) {
 					req.body = {
-						userId: user[0]._id,
-						email: user[0].email,
-						permissionLevel: user[0].permissionLevel,
+						userId: user._id,
+						email: user.email,
+						permissionLevel: user.permissionLevel,
 						provider: 'email',
-						username: user[0].username,
-						name: user[0].firstName + ' ' + user[0].lastName,
+						username: user.username,
 					}
 					return next()
 				} else {

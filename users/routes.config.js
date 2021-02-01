@@ -1,6 +1,7 @@
 const UsersController = require('./controllers/users.controller')
 const PermissionMiddleware = require('../common/middlewares/auth.permission.middleware')
 const ValidationMiddleware = require('../common/middlewares/auth.validation.middleware')
+const AuthorizationController = require('../authorization/controllers/authorization.controller')
 
 module.exports.routesConfig = function (app) {
 	app.post('/users', [
@@ -38,6 +39,7 @@ module.exports.routesConfig = function (app) {
 		UsersController.patchByEmail
 	])
 	app.post('/users/facebook', [
-		UsersController.handleFaceBookLogin
+		UsersController.handleFaceBookLogin,
+		AuthorizationController.login
 	])
 }
