@@ -93,7 +93,7 @@ module.exports.patchByEmail = (req, res) => {
 	UserModel.resetPassword(req.params.email, req.body.password)
 		.then(() => {
 			res.status(200).send({
-				success: true,
+				isSuccess: true,
 			})
 		})
 }
@@ -106,7 +106,7 @@ module.exports.createPasswordRecovery = (req, res) => {
 		expiresAt: new Date().setMinutes(new Date().getMinutes() + 30)
 	}).then(() => {
 		res.status(200).send({
-			success: true
+			isSuccess: true
 		})
 	})
 }
