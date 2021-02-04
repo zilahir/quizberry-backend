@@ -20,6 +20,7 @@ module.exports.login = (req, res) => {
 			username: req.body.username,
 			isLoggedIn: true,
 			lastLogin: new Date(),
+			isSuccess: true,
 		})
 	} catch (error) {
 		res.status(500).send({ errors: error })
