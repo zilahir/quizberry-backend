@@ -65,7 +65,7 @@ module.exports.patchPasswordRecovery = (req, res) => {
 	UserModel.setPasswordRecoveryToUsed(req.params.slug)
 		.then(() => {
 			res.status(200).send({
-				success: true,
+				isSuccess: true,
 			})
 		})
 }
@@ -79,7 +79,7 @@ module.exports.patchByEmail = (req, res) => {
 	UserModel.resetPassword(req.params.email, req.body.password)
 		.then(() => {
 			res.status(200).send({
-				success: true,
+				isSuccess: true,
 			})
 		})
 }
