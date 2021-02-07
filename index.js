@@ -5,6 +5,7 @@ const server = require("http").Server(app)
 const bodyParser = require('body-parser')
 const { graphqlHTTP } = require('express-graphql')
 const serverless = require('serverless-http')
+const ngrok = require('ngrok')
 
 // const io = require("socket.io")(server)
 const UsersRouter = require('./users/routes.config')
@@ -45,6 +46,15 @@ app.get('/', function (req, res) {
 })
 
 // eslint-disable-next-line no-console
-server.listen(PORT, () => console.log(`Listen on *: ${PORT}`))
+server.listen(PORT, () => {
+	console.debug(`Listen on *: ${PORT}`)
+	ngrok.connect({
+		port: PORT,
+		authtoken: 'i8rcHzWUZEz15resuqWJ_3CsUyJvsSAJEpHVV2LVr4'
+	})
+		.then(result => {
+			console.debug('ngrok', result)
+		})
+})
 
 // module.exports.handler = serverless(app)
