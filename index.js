@@ -48,13 +48,13 @@ app.get('/', function (req, res) {
 // eslint-disable-next-line no-console
 server.listen(PORT, () => {
 	console.debug(`Listen on *: ${PORT}`)
-	ngrok.connect({
+	/* ngrok.connect({
 		port: PORT,
 		authtoken: 'i8rcHzWUZEz15resuqWJ_3CsUyJvsSAJEpHVV2LVr4'
 	})
 		.then(result => {
 			console.debug('ngrok', result)
-		})
+		}) */
 })
 
 // module.exports.handler = serverless(app)

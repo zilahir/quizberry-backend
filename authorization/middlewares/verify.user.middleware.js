@@ -24,14 +24,14 @@ module.exports.hasAuthValidFields = (req, res, next) => {
 
 module.exports.isPasswordAndUserMatch = (req, res, next) => {
 	UserModel.findByEmail(req.body.email)
-		.then(user=>{
-			if(!user){
+		.then(user => {
+			if(!user){ //TODO: if user is facebook user, the L#36 fails
 				res.status(200).send({
 					isSuccess: false,
 					error: 'No user with this email',
 					reason: 404,
 				})
-			}else{
+			} else {
 				let passwordFields = user.password.split('$')
 				let salt = passwordFields[0]
 				let hash = crypto.createHmac('sha512', salt).update(req.body.password).digest("base64")
