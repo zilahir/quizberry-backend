@@ -28,7 +28,7 @@ module.exports.isPasswordAndUserMatch = (req, res, next) => {
 			if(!user){ //TODO: if user is facebook user, the L#36 fails
 				res.status(200).send({
 					isSuccess: false,
-					error: 'No user with this email',
+					error: 'No user with this email!',
 					reason: 404,
 				})
 			} else {

@@ -19,7 +19,8 @@ const {
 	GraphQLList,
 	GraphQLNonNull,
 	GraphQLInputObjectType,
-	GraphQLBoolean
+	GraphQLBoolean,
+	GraphQLInt
 } = graphql
 
 const UserType = new GraphQLObjectType({
@@ -88,6 +89,13 @@ const QuizType = new GraphQLObjectType({
 		questions: {
 			type: new GraphQLList(QuestionType)
 		}
+	})
+})
+
+const DeleteQuizType = new GraphQLObjectType({
+	name: 'DeleteQuiz',
+	fields: () => ({
+		deletedCount: { type: GraphQLInt }
 	})
 })
 
@@ -184,6 +192,16 @@ const Mutation = new GraphQLObjectType({
 				})
 				
 				return newQuiz.save()
+			}
+		},
+		deleteQuiz: {
+			type: DeleteQuizType,
+			args: {
+				quizId: { type: new GraphQLNonNull(GraphQLID) }
+			},
+			resolve(parent, args) {
+				const { quizId } = args
+				return Quiz.remove({ _id: quizId })
 			}
 		}
 	}
