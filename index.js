@@ -45,8 +45,8 @@ app.get('/', function (req, res) {
 	})
 })
 
-// eslint-disable-next-line no-console
 server.listen(PORT, () => {
+	// eslint-disable-next-line no-console
 	console.debug(`Listen on *: ${PORT}`)
 	/* ngrok.connect({
 		port: PORT,
