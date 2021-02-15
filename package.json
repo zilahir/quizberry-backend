@@ -46,7 +46,7 @@
     "nodemailer": "^6.4.6",
     "nodemailer-express-handlebars": "^4.0.0",
     "nodemon": "^2.0.2",
-    "react-router": "^5.1.2",
+    "react-router": "^5.2.0",
     "serverless-http": "^2.5.0",
     "shortid": "^2.2.16",
     "socket.io": "^2.3.0",
