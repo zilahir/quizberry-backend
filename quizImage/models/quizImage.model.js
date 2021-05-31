@@ -29,6 +29,7 @@ module.exports.insertQuizImage = quizImage => {
 }
 
 module.exports.uploadImage = req => {
+	console.debug('req', req.files)
 	return new Promise(resolve => {
 		const s3 = new AWS.S3({
 			accessKeyId: process.env.AWS_ACCESS,
@@ -37,8 +38,8 @@ module.exports.uploadImage = req => {
 
 		const params = {
 			Bucket: process.env.AWS_BUCKET,
-			Key: req.files.image.name,
-			Body: req.files.image.data,
+			Key: req.files.photo.name,
+			Body: req.files.photo.data,
 			ACL: 'public-read'
 		}
 		
@@ -50,7 +51,7 @@ module.exports.uploadImage = req => {
 				console.debug(`success: ${data.Location}`)
 				this.insertQuizImage({
 					url: data.Location,
-					quizId: req.body.quizId
+					quizId: 'demo'
 				})
 			}
 		})

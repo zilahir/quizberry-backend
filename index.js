@@ -11,6 +11,7 @@ const ngrok = require('ngrok')
 const UsersRouter = require('./users/routes.config')
 const AuthorizationRouter = require('./authorization/routes.config')
 const EmailRouter = require('./emails/routes.config')
+const QuizImageRouter = require('./quizImage/routes.config')
 const schema = require('./graphql/schemas/schemas')
 
 require('dotenv').config()
@@ -36,6 +37,7 @@ app.use('/graphql', graphqlHTTP({
 AuthorizationRouter.routesConfig(app)
 UsersRouter.routesConfig(app)
 EmailRouter.routesConfig(app)
+QuizImageRouter.routesConfig(app)
 
 
 app.get('/', function (req, res) {
